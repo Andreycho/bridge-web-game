@@ -1,14 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users
   
-  root 'sessions#home'
-
-  #User routes
-  resources :users, only: [:new, :create, :edit, :update, :show, :destroy]
-
-  #Session routes
-  get '/login', to: 'sessions#login'
-  post '/login', to: 'sessions#create'
-  get '/logout', to: 'sessions#destroy'
-  get '/logout', to: 'sessions#destroy'
+  root 'home#index'
 
 end
