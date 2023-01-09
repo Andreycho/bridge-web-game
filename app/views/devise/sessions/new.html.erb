@@ -8,7 +8,7 @@
         Or
         <a href="/users/sign_up" class="font-medium text-indigo-600 hover:text-indigo-600">Sign up</a>
     </div>
-    <form class="mt-8 space-y-6" action="/users" method="POST">
+    <form class="mt-8 space-y-6" action="/users/sign_in" method="POST">
       <%# <input type="hidden" name="remember" value="true"> %>
       <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
       <div class="-space-y-px rounded-md shadow-sm">
@@ -24,12 +24,14 @@
 
       <div class="flex items-center justify-between">
         <div class="flex items-center">
-          <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-red focus:ring-primary-red">
+          <input type="hidden" name="user[remember_me]" value="0" class="h-4 w-4 rounded border-gray-300 text-primary-red focus:ring-primary-red">
+          <input id="remember-me" name="user[remember_me]" value="1" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-primary-red focus:ring-primary-red">
           <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
         </div>
+      </div>
 
         <div class="text-sm">
-          <a href="#" class="font-medium text-primary-red hover:text-indigo-500">Forgot your password?</a>
+          <a href="/users/password/new" class="font-medium text-primary-red hover:text-indigo-500">Forgot your password?</a>
         </div>
       </div>
 
