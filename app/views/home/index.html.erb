@@ -2,7 +2,11 @@
 <%# <div class=" flex justify-center items-center h-screen text-3xl font-bold underline">
    <h1> Hello world jhsf! </h1>
 </div> %>
-
 <div class="flex justify-center items-center h-screen">
-   <button class="bg-primary-red hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"> Start a game</button>
+   <button class="bg-primary-red hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+   Create Game
+   </button>
+   <%# <%= button_to "Create game", game_path(@game), method: :post %> %>
 </div>
+<%# <%= render "game", game: @game %> %>
+
