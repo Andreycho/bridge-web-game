@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     get 'logout', to: 'devise/sessions#destroy'  
   end
 
-  post 'create_game', to: 'games#create'
+  resources :games
 
   root 'home#index'
 end
