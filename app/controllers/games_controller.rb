@@ -9,7 +9,7 @@ class GamesController < ApplicationController
     end
 
     def new
-      @game = Game.new
+      @game = Game.create
     end
         
     def create
@@ -18,7 +18,7 @@ class GamesController < ApplicationController
       if @game.save
         redirect_to game_path(@game), notice: "Game was successfully created."
       else
-        render :new
+        render :new, status: :unprocessable_entity
       end
     end
 
