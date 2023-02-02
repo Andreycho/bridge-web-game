@@ -10,17 +10,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_24_002021) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_02_005908) do
+  create_table "calls", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "call"
+    t.index ["user_id"], name: "index_calls_on_user_id"
+  end
+
   create_table "cards", force: :cascade do |t|
     t.string "suit"
     t.string "value"
+  end
+
+  create_table "contracts", force: :cascade do |t|
+    t.integer "level"
+    t.string "suit"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.string "status"
+    t.string "turn"
+    t.integer "west_player_id"
+    t.integer "north_player_id"
+    t.integer "east_player_id"
+    t.integer "south_player_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "games", force: :cascade do |t|
+  create_table "playables", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "game_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_playables_on_game_id"
+    t.index ["user_id"], name: "index_playables_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -35,4 +59,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_002021) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "calls", "users"
+  add_foreign_key "playables", "games"
+  add_foreign_key "playables", "users"
 end
