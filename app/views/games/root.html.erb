@@ -1,0 +1,40 @@
+
+    <!-- <p>--- session:</p> -->
+    <%#= raw session.inspect %>
+    <% if session[:game_id].blank? then %>
+      <h2>Your game was not found.</h2>
+      <%= link_to 'New', new_game_path %>
+    <% else %>
+      <% @game = Game.find(session[:game_id]) %>
+
+      <!-- <p>--- @game:</p> -->
+      <%#= @game.inspect %>
+
+      <hr>
+      <%= button_to 'Draw', draw_button_path %>
+      <%= button_to 'Shuffle', shuffle_button_path %>
+      <%= button_to 'Show', show_button_path %> </p>
+      <h2>Your Hand:</h2>
+      </br>
+      <% if @game.hand.size > 0 then %>
+        <h3>Hearts:</h3>
+        <% @game.hand.each do |card| %>
+          <%= if card =~ /^h(\d+)$/ then raw "#{@game.suit($1.to_i)} " end %>
+        <% end %>
+        <h3>Clubs:</h3>
+        <% @game.hand.each do |card| %>
+          <%= if card =~ /^c(\d+)$/ then raw "#{@game.suit($1.to_i)} " end %>
+        <% end %>
+        <h3>Diamonds:</h3>
+        <% @game.hand.each do |card| %>
+          <%= if card =~ /^d(\d+)$/ then raw "#{@game.suit($1.to_i)} " end %>
+        <% end %>
+        <h3>Spades:</h3>
+        <% @game.hand.each do |card| %>
+          <%= if card =~ /^s(\d+)$/ then raw "#{@game.suit($1.to_i)} " end %>
+        <% end %>
+      <% else %>
+        <p>No cards yet in your hand.</p>
+      <% end %>
+    <% end %>
+

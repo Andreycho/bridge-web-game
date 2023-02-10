@@ -1,1 +1,11 @@
 <h3>Let's start!</h3>
+
+<%# <%= image_tag(asset_url("clubs-2.png")) %> 
+
+<div class="flex flex-row justify-between">
+  <% @hand.cards.each do |card| %>
+  <div class="w-1/13">
+    <%= image_tag "cards/#{card.suit}-#{card.value}.png", class: 'w-32 h-46 m-2 float-left' %>
+  </div>
+  <% end %>
+</div>
