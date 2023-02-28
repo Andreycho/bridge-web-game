@@ -1,0 +1,15 @@
+<%= simple_form_for @playable,
+                    html: {
+                      class: "game form",
+                      data: { turbo: false }
+                    } do |f| %>  
+  <% if @playable.errors.any? %>
+    <div class="error-message">
+      <%= @playable.errors.full_messages.to_sentence.capitalize %>
+    </div>
+  <% end %>
+  
+  <%= f.hidden_field :game_id, value: @playable.game_id || params[:game_id] %>
+
+  <%= f.submit "Join", class: "btn btn--secondary" %>
+<% end %>

@@ -1,11 +1,21 @@
-class Hand
-    attr_reader :cards
+class Hand < ApplicationRecord
+    belongs_to :user
+    belongs_to :game
   
-    def initialize(deck)
-      @deck = deck
-      @cards = []
-      @facts = []
-      draw(13)
+    attr_reader :cards
+
+    # def initialize(deck)
+    #   @deck = deck
+    #   @cards = []
+    #   # draw(13)
+    # end
+
+    def self.create_hand_for_user_and_game(user, game, deck)
+      Hand.create!(
+        user: user,
+        game: game,
+        cards: deck.pop(13)
+      )
     end
 
     def draw(n)
@@ -15,7 +25,7 @@ class Hand
     end
 
     def shuffle 
-        @cards.shuffle!
+        @cards.shuffle
     end
   
     # def sort

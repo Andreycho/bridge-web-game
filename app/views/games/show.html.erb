@@ -1,11 +1,21 @@
-<h3>Let's start!</h3>
 
-<%# <%= image_tag(asset_url("clubs-2.png")) %> 
 
-<div class="flex flex-row justify-between">
-  <% @hand.cards.each do |card| %>
-  <div class="w-1/13">
-    <%= image_tag "cards/#{card.suit}-#{card.value}.png", class: 'w-32 h-46 m-2 float-left' %>
-  </div>
-  <% end %>
-</div>
+<%# <div class="players">
+  <% @game.user.each do |user| %>
+    <%# <%= render partial: 'hand', locals: { hand: @game.hands.find_by(user: user) } %>
+  <%# <% end %>
+<%# </div> %>
+
+<h1>
+  Game <%= @game.id %>
+</h1>
+<p>
+      Current player count: <%= Playable.where(game: @game).count %>
+      <% if Playable.where(game: @game).count < 4 && Playable.where(game: @game, user: current_user).count == 0  %>
+        <%= link_to "Join", new_playable_path(game_id: @game.id), class: "btn btn--secondary" %>
+      <% else %>
+        Show game
+        HAPPY PATH
+      <% end %>
+    </p>
+

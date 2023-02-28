@@ -5,10 +5,35 @@ class GamesController < ApplicationController
         @games = Game.all
     end
 
+    # def show
+    #     @game = Game.find(params[:id])
+    #     @deck = Deck.new
+    #     @hand = Hand.new(@deck)
+    #     @hand = @game.hands.find_by(user_id: current_user.id)
+    #     ActionCable.server.broadcast "game_#{@game.id}", hand: @hand.cards
+    # end
+
+    # def show
+    #   @game = Game.find(params[:id])
+    #   @deck = Deck.new
+    #   @hand = @game.hands.find_by(user_id: current_user.id)
+    #   unless @hand
+    #     @hand = Hand.new(@deck)
+    #     @hand.user = current_user
+    #     @hand.game = @game
+    #     @hand.save
+    #   end
+    #   ActionCable.server.broadcast "game_#{@game.id}", hand: @hand.cards
+    # end
+
     def show
-        @game = Game.find(params[:id])
-        @deck = Deck.new
-        @hand = Hand.new(@deck)
+      @game = Game.find(params[:id])
+      # @deck = Card.all.to_a.shuffle
+      # @hand = @game.hands.find_or_initialize_by(user_id: current_user.id)
+      # @hand.user = current_user
+      # @hand.cards = @deck.pop(13)
+      # @hand.save!
+      # ActionCable.server.broadcast "game_#{@game.id}", hand: @hand.cards
     end
 
     def new
@@ -18,52 +43,49 @@ class GamesController < ApplicationController
       else
         render :new, status: :unprocessable_entity
       end
+      @game.distribute_cards
+      # ActionCable.server.broadcast "game_#{@game.id}", hands: @game.hands
     end
         
+    # def create
+    #     @game = Game.new()
+
+    #   if @game.save
+    #     redirect_to game_path(@game)
+    #   else
+    #     render :new, status: :unprocessable_entity
+    #   end
+    # end
+
     def create
-        @game = Game.new(game_params)
+      @game = Game.new(user_id: current_user.id)
 
       if @game.save
-        redirect_to game_path(@game)
+        players = User.limit(4)
+        deck = Card.all.to_a.shuffle
+        hands = players.map do |player|
+          hand = Hand.create(game: @game, user: player, cards: deck.pop(13))
+          hand
+        end
+        # hands.each do |hand|
+        #   broadcast_cards(hand, "game_channel_#{hand.user.id}")
+        # end
+        redirect_to @game, notice: "Successfully created game."
       else
         render :new, status: :unprocessable_entity
       end
     end
-    #   private
-      
-    #   def game_params
-    #     params.require(:game).permit(:id)
-    #   end
 
-    # def index
-    #   render :template => 'games/root'
-    # end
-  
-    # def draw
-    #   @game = Game.find(session[:game_id])
-    #   prev_size = @game.hand.size
-    #   @game.draw_card
-    #   if @game.hand.size > prev_size then
-    #     redirect_to games_path(@game), notice: "You have drawn a card."
-    #   else
-    #     redirect_to games_path(@game), notice: "You did NOT draw a card."
-    #   end
-    # end
-  
-    # def shuffle
-    #   Game.find(session[:game_id]).shuffle
-    #   redirect_to games_path(@game), notice: "You have re-shuffled the deck."
-    # end
-  
-    # def show
-    #   Game.find(session[:game_id]).show
-    #   redirect_to games_path(@game), notice: "You have drawn all cards from the deck!"
-    # end
-  
-    # def new
-    #   @game = Game.create
-    #   @game.shuffle
-    #   session[:game_id] = @game.id
-    #   redirect_to games_path(@game), notice: "You have created a new game."
-    # end
-end
+    def broadcast_cards(hand, channel = 'game_channel')
+      # @hand = hand
+      # turbo_stream.append 'cards', partial: 'cards', locals: { hand: hand }
+      @hand = hand
+      turbo_stream.append "#{channel}_#{hand.user.id}", partial: 'hand', locals: { hand: hand }
+    end
+    
+      private
+      
+      def game_params
+        params.require(:game).permit(:id)
+      end
+    end
