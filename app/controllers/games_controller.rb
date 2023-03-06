@@ -28,12 +28,24 @@ class GamesController < ApplicationController
 
     def show
       @game = Game.find(params[:id])
+      @current_user_hand = Hand.find_by(game: @game, user: current_user)
+      # debugger
       # @deck = Card.all.to_a.shuffle
       # @hand = @game.hands.find_or_initialize_by(user_id: current_user.id)
       # @hand.user = current_user
       # @hand.cards = @deck.pop(13)
       # @hand.save!
       # ActionCable.server.broadcast "game_#{@game.id}", hand: @hand.cards
+      player_count = Playable.where(game_id: @game.id).count
+
+      if player_count == 4
+        players = User.limit(4)
+        deck = Card.all.to_a.shuffle
+        @hands = players.map do |player|
+          hand = Hand.create(game: @game, user: player, cards: deck.pop(13))
+          hand
+        end
+      end
     end
 
     def new
@@ -61,12 +73,12 @@ class GamesController < ApplicationController
       @game = Game.new(user_id: current_user.id)
 
       if @game.save
-        players = User.limit(4)
-        deck = Card.all.to_a.shuffle
-        hands = players.map do |player|
-          hand = Hand.create(game: @game, user: player, cards: deck.pop(13))
-          hand
-        end
+        # players = User.limit(4)
+        # deck = Card.all.to_a.shuffle
+        # hands = players.map do |player|
+        #   hand = Hand.create(game: @game, user: player, cards: deck.pop(13))
+        #   hand
+        # end
         # hands.each do |hand|
         #   broadcast_cards(hand, "game_channel_#{hand.user.id}")
         # end

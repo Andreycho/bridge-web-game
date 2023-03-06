@@ -5,13 +5,13 @@ class Game < ApplicationRecord
 
     # before_create :distribute_cards 
 
-    attr_reader :cards
+  #   attr_reader :cards
 
-    enum status: { auction: 0, card_play: 1, finished: 2}
-    enum turns: { west: 0, north: 1, east: 2, south: 3 }
+  #   enum status: { auction: 0, card_play: 1, finished: 2}
+  #   enum turns: { west: 0, north: 1, east: 2, south: 3 }
 
-  serialize :deck, Array
-  serialize :hand, Array
+  # serialize :deck, Array
+  # serialize :hand, Array
 
   def distribute_cards
     players = User.limit(4)

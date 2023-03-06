@@ -5,17 +5,26 @@
     <%# <%= render partial: 'hand', locals: { hand: @game.hands.find_by(user: user) } %>
   <%# <% end %>
 <%# </div> %>
-
-<h1>
-  Game <%= @game.id %>
+<div class="text-center">
+<h1 class="text-3xl bg-primary-red text-white px-2 py-1">
+  Game: <%= @game.id %>
 </h1>
-<p>
+</div>
+
+
+<p class="text-white px-4 py-2">
       Current player count: <%= Playable.where(game: @game).count %>
       <% if Playable.where(game: @game).count < 4 && Playable.where(game: @game, user: current_user).count == 0  %>
         <%= link_to "Join", new_playable_path(game_id: @game.id), class: "btn btn--secondary" %>
-      <% else %>
-        Show game
-        HAPPY PATH
       <% end %>
-    </p>
+</p>
 
+<% if Playable.where(game: @game).count == 4%>
+<table>
+  <tr>
+    <% @current_user_hand.cards.each do |card| %>
+    <%= image_tag "cards/#{card.suit}-#{card.value}.png", class: 'w-32 h-46 m-2 float-left' %>
+    <% end %>
+  </tr>
+</table>
+<% end %>

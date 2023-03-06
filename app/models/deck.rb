@@ -15,6 +15,6 @@ class Deck
     end
 
     def draw
-        @cards.pop
+        @cards.pop(13)
     end
 end
