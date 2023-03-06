@@ -1,7 +1,9 @@
 class Hand < ApplicationRecord
     belongs_to :user
     belongs_to :game
-    serialize :cards, Array
+    # serialize :cards, Array
+    has_many :hand_cards
+    has_many :cards, through: :hand_cards
     # attr_reader :cards
 
     # def initialize(deck)

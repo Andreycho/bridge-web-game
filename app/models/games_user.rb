@@ -1,2 +1,0 @@
-class GamesUser < ApplicationRecord
-end

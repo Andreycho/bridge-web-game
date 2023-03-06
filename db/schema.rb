@@ -10,13 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_22_180945) do
-  create_table "calls", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.string "call"
-    t.index ["user_id"], name: "index_calls_on_user_id"
-  end
-
+ActiveRecord::Schema[7.0].define(version: 2023_03_06_161804) do
   create_table "cards", force: :cascade do |t|
     t.string "suit"
     t.string "value"
@@ -28,25 +22,22 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_22_180945) do
   end
 
   create_table "games", force: :cascade do |t|
-    t.string "status"
-    t.string "turn"
-    t.integer "west_player_id"
-    t.integer "north_player_id"
-    t.integer "east_player_id"
-    t.integer "south_player_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
   end
 
-  create_table "games_users", force: :cascade do |t|
+  create_table "hand_cards", force: :cascade do |t|
+    t.integer "hand_id", null: false
+    t.integer "card_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["card_id"], name: "index_hand_cards_on_card_id"
+    t.index ["hand_id"], name: "index_hand_cards_on_hand_id"
   end
 
   create_table "hands", force: :cascade do |t|
     t.integer "user_id", null: false
-    t.string "cards", default: "--- []\n"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "game_id"
@@ -74,7 +65,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_22_180945) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "calls", "users"
+  add_foreign_key "hand_cards", "cards"
+  add_foreign_key "hand_cards", "hands"
   add_foreign_key "hands", "users"
   add_foreign_key "playables", "games"
   add_foreign_key "playables", "users"
