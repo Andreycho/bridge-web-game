@@ -28,7 +28,6 @@ class GamesController < ApplicationController
 
     def show
       @game = Game.find(params[:id])
-      @current_user_hand = Hand.find_by(game: @game, user: current_user)
       # debugger
       # @deck = Card.all.to_a.shuffle
       # @hand = @game.hands.find_or_initialize_by(user_id: current_user.id)
@@ -45,7 +44,9 @@ class GamesController < ApplicationController
           hand = Hand.create(game: @game, user: player, cards: deck.pop(13))
           hand
         end
+        @current_user_hand = Hand.find_by(game: @game, user: current_user)
       end
+      
     end
 
     def new
@@ -58,16 +59,6 @@ class GamesController < ApplicationController
       @game.distribute_cards
       # ActionCable.server.broadcast "game_#{@game.id}", hands: @game.hands
     end
-        
-    # def create
-    #     @game = Game.new()
-
-    #   if @game.save
-    #     redirect_to game_path(@game)
-    #   else
-    #     render :new, status: :unprocessable_entity
-    #   end
-    # end
 
     def create
       @game = Game.new(user_id: current_user.id)

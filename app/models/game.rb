@@ -21,18 +21,19 @@ class Game < ApplicationRecord
     end
   end
 
-  # def distribute_cards
-  #   players = User.limit(4)
-  #   cards = Card.all.to_a.shuffle
-  #   hands = players.map do |player|
-  #     hand = Hand.new(game: self, user: player)
-  #     hand.cards = cards.shift(13)
-  #     hand.save!
-  #   end
-  # end
-#   def shuffle
-#     new_random_deck
-#     self.save
-#   end
- 
+  def is_current_turn?
+    players = Playable.where(game_id: self.game_id).order(:created_at).to_a
+    my_position = players.index(self)
+    previous_player_id = players[(my_position - 1) % players.count].id
+
+    last_turn = Turn.joins(:games_user).where(games_users: { game_id: self.game_id }).last
+
+    if last_turn.nil? 
+        return players[0].id == self.id
+    elsif last_turn.games_user_id == previous_player_id
+        return true
+    else
+        return false
+    end
+  end
 end
