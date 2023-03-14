@@ -46,7 +46,8 @@ class GamesController < ApplicationController
         end
         @current_user_hand = Hand.find_by(game: @game, user: current_user)
       end
-      
+
+      # @game.create_trick_if_needed      
     end
 
     def new

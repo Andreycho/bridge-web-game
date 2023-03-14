@@ -1,31 +1,49 @@
 
-<div class="flex items-center justify-between bg-primary-red text-white h-12">
+<div class="flex items-center justify-between bg-primary-red text-black h-12">
   <div class="flex items-center">
     <a href="<%= root_path %>"><%= image_tag("logo.png", class: "w-12 h-12 ml-4") %> </a>
     <h1 class="text-3xl font-bold text-center ml-2">
       Game: <%= @game.id %>
     </h1>
   </div>
-  <form class="mr-4" method="get" action="/logout">
-    <button type="submit" class="bg-white text-white rounded-full px-4 py-2 shadow-md">
+  <form class="mr-4" method="get" action="/users/sign_out">
+    <button type="submit" class="bg-primary-red text-black rounded-full px-4 py-2 shadow-md">
       Sign out
     </button>
   </form>
 </div>
 
-<p class="text-white px-4 py-2">
-      Current player count: <%= Playable.where(game: @game).count %>
+<p class="text-white text-center px-4 py-2">
+      Current players in the game: <%= Playable.where(game: @game).count %>
       <% if Playable.where(game: @game).count < 4 && Playable.where(game: @game, user: current_user).count == 0  %>
         <%= link_to "Join", new_playable_path(game_id: @game.id), class: "bg-primary-red hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded" %>
       <% end %>
 </p>
 
+Current player: <%= current_user.id%>
+
 <% if Playable.where(game: @game).count == 4%>
+<div class="flex flex-col items-center">
+  <div class="flex flex-wrap justify-center">
+    <table>
+      <tr>
+        <% @current_user_hand.current_cards.each do |card| %>
+          <a href="<%= new_turn_path(card_id: card.id, game_id: @game.id) %>"><%= image_tag "cards/#{card.suit}-#{card.value}.png", class: 'w-32 h-46 m-2 float-left' %></a>
+<% end %>
+  </div>
+      </tr> 
+    </table>
+<p text-white px-4 py-2>
+Played cards:
+</p>
+<div class="flex flex-wrap justify-center">
 <table>
   <tr>
-    <% @current_user_hand.cards.each do |card| %>
-    <a href="<%= new_turn_path(card_id: card.id, game_id: @game.id) %>"><%= image_tag "cards/#{card.suit}-#{card.value}.png", class: 'w-32 h-46 m-2 float-left' %></a>
+    <% @game.current_trick_cards.each do |card| %>
+    <%= image_tag "cards/#{card.suit}-#{card.value}.png", class: 'w-32 h-46 m-2 float-left' %>
     <% end %>
-  </tr>
+  </tr> 
 </table>
+</div>
+</div>
 <% end %>

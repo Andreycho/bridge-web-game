@@ -30,4 +30,10 @@ class Hand < ApplicationRecord
     def shuffle 
         @cards.shuffle
     end
+
+    def current_cards
+      @played_cards = Turn.where(game_id: game.id, user_id: user.id).pluck(:card_id)
+      @remaining_cards = cards.pluck(:id) - @played_cards
+      Card.where(id: @remaining_cards)
+    end
   end

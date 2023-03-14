@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_08_202159) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_09_231318) do
   create_table "cards", force: :cascade do |t|
     t.string "suit"
     t.string "value"
@@ -53,6 +53,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_202159) do
     t.index ["user_id"], name: "index_playables_on_user_id"
   end
 
+  create_table "tricks", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_tricks_on_game_id"
+  end
+
   create_table "turns", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "card_id", null: false
@@ -81,6 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_08_202159) do
   add_foreign_key "hands", "users"
   add_foreign_key "playables", "games"
   add_foreign_key "playables", "users"
+  add_foreign_key "tricks", "games"
   add_foreign_key "turns", "cards"
   add_foreign_key "turns", "users"
 end
