@@ -19,3 +19,4 @@
 # end
 
 
+Contract.create(id: 36, suit: "pass")

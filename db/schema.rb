@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_09_231318) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_16_025927) do
   create_table "cards", force: :cascade do |t|
     t.string "suit"
     t.string "value"
+  end
+
+  create_table "contract_turns", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.integer "user_id", null: false
+    t.integer "contract_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["contract_id"], name: "index_contract_turns_on_contract_id"
+    t.index ["game_id"], name: "index_contract_turns_on_game_id"
+    t.index ["user_id"], name: "index_contract_turns_on_user_id"
   end
 
   create_table "contracts", force: :cascade do |t|
@@ -24,6 +35,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_09_231318) do
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "bidding"
     t.integer "user_id"
   end
 
@@ -53,13 +65,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_09_231318) do
     t.index ["user_id"], name: "index_playables_on_user_id"
   end
 
-  create_table "tricks", force: :cascade do |t|
-    t.integer "game_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["game_id"], name: "index_tricks_on_game_id"
-  end
-
   create_table "turns", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "card_id", null: false
@@ -83,12 +88,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_09_231318) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "contract_turns", "contracts"
+  add_foreign_key "contract_turns", "games"
+  add_foreign_key "contract_turns", "users"
   add_foreign_key "hand_cards", "cards"
   add_foreign_key "hand_cards", "hands"
   add_foreign_key "hands", "users"
   add_foreign_key "playables", "games"
   add_foreign_key "playables", "users"
-  add_foreign_key "tricks", "games"
   add_foreign_key "turns", "cards"
   add_foreign_key "turns", "users"
 end

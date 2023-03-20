@@ -1,0 +1,2 @@
+module ContractTurnsHelper
+end

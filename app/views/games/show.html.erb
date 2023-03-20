@@ -1,26 +1,67 @@
 
 <div class="flex items-center justify-between bg-primary-red text-black h-12">
   <div class="flex items-center">
-    <a href="<%= root_path %>"><%= image_tag("logo.png", class: "w-12 h-12 ml-4") %> </a>
+    <a href="<%= root_path %>"><%= image_tag("logo.png", class: "w-12 h-12 ml-4") %></a>
     <h1 class="text-3xl font-bold text-center ml-2">
       Game: <%= @game.id %>
     </h1>
   </div>
-  <form class="mr-4" method="get" action="/users/sign_out">
-    <button type="submit" class="bg-primary-red text-black rounded-full px-4 py-2 shadow-md">
-      Sign out
-    </button>
-  </form>
+    <form method="get" action="/users/sign_out">
+      <button type="submit" class="bg-primary-red text-black rounded-full px-4 py-2 shadow-md">
+        Sign out
+      </button>
+    </form>
 </div>
 
 <p class="text-white text-center px-4 py-2">
       Current players in the game: <%= Playable.where(game: @game).count %>
       <% if Playable.where(game: @game).count < 4 && Playable.where(game: @game, user: current_user).count == 0  %>
-        <%= link_to "Join", new_playable_path(game_id: @game.id), class: "bg-primary-red hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded" %>
+        <%= render 'playables/form', playable: Playable.new(game_id: @game.id) %>
       <% end %>
 </p>
 
 Current player: <%= current_user.id%>
+
+<% if @game.is_game_finished? == false %>
+
+<% if @game.compare_cards %>
+  <p>The highest ranked card played in the trick is: <%= @game.compare_cards.value %> of <%= @game.compare_cards.suit %></p>
+<% else %>
+  <p>There are not enough cards to compare.</p>
+<% end %>
+
+<% if Playable.where(game: @game).count == 4%>
+<% if @game.is_bidding_finished? == false %>
+<div class="flex justify-center">
+  <div class="w-full md:w-2/3 lg:w-1/2">
+    <div class="flex justify-between mb-4">
+      <%= link_to "Pass", new_contract_turn_path(contract_id: 36, game_id: @game.id), class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+      <%= link_to "Double", new_contract_turn_path(contract_id: 37, game_id: @game.id), class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th class="px-4 py-2">Level</th>
+            <th class="px-4 py-2">Suit</th>
+            <th class="px-4 py-2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @contracts.each do |contract| %>
+            <tr>
+              <td class="border px-4 py-2"><%= contract.level %></td>
+              <td class="border px-4 py-2"><%= contract.suit %></td>
+              <td class="border px-4 py-2"><%= link_to "Choose", new_contract_turn_path(contract_id: contract.id, game_id: @game.id),class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<% end %>
+<% end %>
 
 <% if Playable.where(game: @game).count == 4%>
 <div class="flex flex-col items-center">
@@ -29,6 +70,7 @@ Current player: <%= current_user.id%>
       <tr>
         <% @current_user_hand.current_cards.each do |card| %>
           <a href="<%= new_turn_path(card_id: card.id, game_id: @game.id) %>"><%= image_tag "cards/#{card.suit}-#{card.value}.png", class: 'w-32 h-46 m-2 float-left' %></a>
+          <%= render 'turns/form', turn: Turn.new(card_id: card.id, game_id: @game.id) %>
 <% end %>
   </div>
       </tr> 
@@ -46,4 +88,10 @@ Played cards:
 </table>
 </div>
 </div>
+<% end %>
+
+<% else %>
+  <p class="text-white text-center px-4 py-2">
+    The game is finished.
+  </p>
 <% end %>

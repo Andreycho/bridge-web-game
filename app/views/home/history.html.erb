@@ -1,0 +1,35 @@
+<table class="table-auto mx-auto">
+  <thead>
+    <tr>
+      <th class="px-4 py-2">Game ID</th>
+      <th class="px-4 py-2">Contract</th>
+      <th class="px-4 py-2">Turns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% last_finished_game = Game.where(status: "finished").last %>
+    <% if last_finished_game %>
+      <tr>
+        <td class="border px-4 py-2"><%= last_finished_game.id %></td>
+        <td class="px-4 py-2 border border-gray-400"><%= Contract.find_by(id: last_finished_game.current_contract).level %> of <%= Contract.find_by(id: last_finished_game.current_contract).suit %> </td>
+        <td class="border px-4 py-2">
+          <% Turn.where(game_id: last_finished_game.id).each do |turn| %>
+            <div>
+              Card: <%= Card.find_by(id: turn.card_id).value %> of <%= Card.find_by(id: turn.card_id).suit %> |
+              User ID: <%= turn.user_id %>
+            </div>
+          <% end %>
+        </td>
+      </tr>
+    <% else %>
+      <tr>
+        <td colspan="3" class="text-center py-4">No finished games found.</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+
+

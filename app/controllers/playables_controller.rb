@@ -11,11 +11,6 @@ class PlayablesController < ApplicationController
   
     def create
       @playable = Playable.new(playable_params.merge(user_id: current_user.id))
-  
-      # if current_user.game_id.present?
-      #   redirect_to game_path(current_user.game_id), alert: "You are already in another game."
-      #   return
-      # end
       
       if @playable.save
         respond_to do |format|
@@ -25,15 +20,6 @@ class PlayablesController < ApplicationController
       else
         render :new
       end
-    end
-  
-    def edit
-    end
-  
-    def update
-    end
-  
-    def destroy
     end
   
     def playable_params

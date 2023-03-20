@@ -7,4 +7,5 @@ class User < ApplicationRecord
   has_one :game
   has_one :hand
   has_many :turns
+  has_many :contract_turns
 end
