@@ -6,11 +6,12 @@
       Game: <%= @game.id %>
     </h1>
   </div>
-    <form method="get" action="/users/sign_out">
+    <%# <form action="/users/sign_out">
       <button type="submit" class="bg-primary-red text-black rounded-full px-4 py-2 shadow-md">
         Sign out
       </button>
-    </form>
+    </form> %>
+    <%= link_to "Sign out", destroy_user_session_path, class: "bg-primary-red text-black rounded-full px-4 py-2 shadow-md" %>
 </div>
 
 <p class="text-white text-center px-4 py-2">
@@ -23,6 +24,10 @@
 Current player: <%= current_user.id%>
 
 <% if @game.is_game_finished? == false %>
+
+  <p class = "text-white text-center px-4 py-2">
+    Tricks won by players: <%= @game.tricks_counter %>
+  </p>
 
 <% if @game.compare_cards %>
   <p>The highest ranked card played in the trick is: <%= @game.compare_cards.value %> of <%= @game.compare_cards.suit %></p>
@@ -94,4 +99,13 @@ Played cards:
   <p class="text-white text-center px-4 py-2">
     The game is finished.
   </p>
+  <% if @game.tricks_won >= Contract.find_by(id: @game.current_contract).level + 6 %>
+    <p class="text-white text-center px-4 py-2">
+      The contract was won.
+    </p>
+  <% else %>
+    <p class="text-white text-center px-4 py-2">
+      The contract was lost.
+    </p>
+  <% end %>
 <% end %>

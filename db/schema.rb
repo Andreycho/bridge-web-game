@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_16_025927) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_23_105847) do
   create_table "cards", force: :cascade do |t|
     t.string "suit"
     t.string "value"
@@ -37,6 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_16_025927) do
     t.datetime "updated_at", null: false
     t.string "status", default: "bidding"
     t.integer "user_id"
+    t.integer "tricks_won", default: 0
   end
 
   create_table "hand_cards", force: :cascade do |t|

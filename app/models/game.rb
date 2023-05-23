@@ -51,11 +51,16 @@ class Game < ApplicationRecord
     turns_count = Turn.where(game_id: self.id).count
 
     number_of_tricks_passed = turns_count / 4
+    
+    if turns_count % 4 == 0 && turns_count != 0
+      number_of_tricks_passed -= 1
+    end
+
     first_card_index = 4 * number_of_tricks_passed
     last_card_index = first_card_index + 4
+
     displaying_cards = turns[first_card_index...last_card_index].pluck(:card_id)
     Card.where(id: displaying_cards)
-  # % 4 kolko ostava
   end
 
   def current_contract
@@ -74,8 +79,8 @@ class Game < ApplicationRecord
 
   def compare_cards
     cards = current_trick_cards.to_a
-  
-    if cards.size == 3
+
+    if cards.size == 4
 
       value_map = { "2" => 2, "3" => 3, "4" => 4, "5" => 5, "6" => 6, "7" => 7, "8" => 8, "9" => 9, "10" => 10, "J" => 11, "Q" => 12, "K" => 13, "A" => 14 }
     
@@ -116,10 +121,10 @@ class Game < ApplicationRecord
     end
   end
 
-  def tricks_won
-    turns = Turn.where(game_id: self.id, card_id: compare_cards, user_id: [1, 3]).count
+  def tricks_counter
+    count = Turn.where(game_id: self.id, card_id: compare_cards, user_id: [1, 3]).count
+    update_column(:tricks_won, tricks_won + count)
   end
-
 
 def is_game_finished?
   turns_count = Turn.where(game_id: self.id).count

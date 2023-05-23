@@ -11,7 +11,7 @@ class GamesController < ApplicationController
       player_count = Playable.where(game_id: @game.id).count
 
       if player_count == 4
-        players = User.limit(4)
+        players = Playable.where(game_id: @game.id).map(&:user)
         deck = Card.all.to_a.shuffle
         @hands = players.map do |player|
           hand = Hand.create(game: @game, user: player, cards: deck.pop(13))
