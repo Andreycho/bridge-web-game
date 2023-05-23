@@ -11,7 +11,17 @@
     <% if last_finished_game %>
       <tr>
         <td class="border px-4 py-2"><%= last_finished_game.id %></td>
-        <td class="px-4 py-2 border border-gray-400"><%= Contract.find_by(id: last_finished_game.current_contract).level %> of <%= Contract.find_by(id: last_finished_game.current_contract).suit %> </td>
+        <td class="px-4 py-2 border border-gray-400"><%= Contract.find_by(id: last_finished_game.current_contract).level %> of <%= Contract.find_by(id: last_finished_game.current_contract).suit %>
+        <% if last_finished_game.tricks_won >= Contract.find_by(id: last_finished_game.current_contract).level + 6 %>
+          <p class="text-white text-center px-4 py-2">
+            Fulfilled
+          </p>
+        <% else %>
+          <p class="text-white text-center px-4 py-2">
+            Not fulfilled
+          </p>
+        <% end %>
+        </td>
         <td class="border px-4 py-2">
           <% Turn.where(game_id: last_finished_game.id).each do |turn| %>
             <div>
