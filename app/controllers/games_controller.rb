@@ -40,11 +40,6 @@ class GamesController < ApplicationController
         render :new, status: :unprocessable_entity
       end
     end
-
-    # def history
-    #   @games = Game.order(created_at: :desc)
-    #   @turns = Turn.where(game_id: )
-    # end
     
       private
       

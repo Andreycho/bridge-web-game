@@ -25,9 +25,7 @@ Current player: <%= current_user.id%>
 
 <% if @game.is_game_finished? == false %>
 
-  <p class = "text-white text-center px-4 py-2">
-    Tricks won by players: <%= @game.tricks_counter %>
-  </p>
+  <%= @game.tricks_counter %>
 
 <% if @game.compare_cards %>
   <p>The highest ranked card played in the trick is: <%= @game.compare_cards.value %> of <%= @game.compare_cards.suit %></p>
